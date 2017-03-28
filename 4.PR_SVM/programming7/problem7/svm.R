@@ -111,6 +111,7 @@ sprintf("misclassified=%d/%d, ratio=%f",
         length(validated[validated==FALSE])/length(predicted))
 
 #----------------------------------------------------------
+library(rgl)
 plot3d(x$'x1', x$'x2', x$'x1x2', col=x$'category',
        xlab='x1', ylab='x2',zlab='x1x2', type='s', size=2.4)
 
@@ -120,8 +121,8 @@ plot3d(x$'x1', x$'x2', x$'x1^2', col=x$'category',
 plot3d(x$'x1', x$'x2', x$'x2^2', col=x$'category',
        xlab='x1', ylab='x2',zlab='x2^2', type='s', size=2.4)
 
-plot3d(x$'x1', x$'x2^2', x$'x2^2', col=x$'category',
-       xlab='x1', ylab='x2^2',zlab='x2^2', type='s', size=2.4)
+plot3d(x$'x1', x$'x1^2', x$'x2^2', col=x$'category',
+       xlab='x1', ylab='x1^2',zlab='x2^2', type='s', size=2.4)
 
 plot3d(x$'x1^2', x$'x2^2', x$'x1x2', col=x$'category',
        xlab='x1^2', ylab='x2^2',zlab='x1x2', type='s', size=2.4)
