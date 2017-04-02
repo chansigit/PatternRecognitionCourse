@@ -26,103 +26,46 @@ trainSet4 <- rbind(w1[1:4, ],w2[1:4, ])
 
 # Train and Validate
 library(e1071)
+for (i in 1:10){
+    print("------------------------------------------------------------------------")
+    print(sprintf("training sample size= %d",2*i))
+    
+    trainSet <- rbind(w1[1:i, ],w2[1:i, ])
+    ## train with first 1 points
+    svm_model <- svm(trainSet$category ~ ., trainSet,kernel="linear")
+    #summary(svm_model)
+    # show weights of hyperplane
+    print('weight vector =')
+    w=t(svm_model$coefs)%*% svm_model$SV
+    print(w)
+    # show negative intercept of hyperplane
+    print(sprintf("negative intercept = %f",svm_model$rho))
+    # show the margin
+    print(sprintf("margin = %f",2/sqrt(sum(w^2))))
+    # validation
+    predicted <- predict(svm_model, x)
+    validated <- (predicted==x$category)
+    print(sprintf("misclassified = %d/%d, ratio = %f", 
+            length(validated[validated==FALSE]),
+            length(predicted),
+            length(validated[validated==FALSE])/length(predicted)))
+    
+}
 
-#----------------------------------------------------------
-## train with first 1 points
-svm_model <- svm(trainSet1$category ~ ., trainSet1,kernel="linear")
-summary(svm_model)
-# show weights of hyperplane
-t(svm_model$coefs)%*% svm_model$SV
-# show negative intercept of hyperplane
-svm_model$rho
-
-predicted <- predict(svm_model, x)
-validated <- (predicted==x$category)
-sprintf("misclassified=%d/%d, ratio=%f", 
-        length(validated[validated==FALSE]),
-        length(predicted),
-        length(validated[validated==FALSE])/length(predicted))
-
-
-#----------------------------------------------------------
-## train with first 2 points
-svm_model <- svm(trainSet2$category ~ ., trainSet2,kernel="linear")
-summary(svm_model)
-# show weights of hyperplane
-t(svm_model$coefs)%*% svm_model$SV
-# show negative intercept of hyperplane
-svm_model$rho
-
-predicted <- predict(svm_model, x)
-validated <- (predicted==x$category)
-sprintf("misclassified=%d/%d, ratio=%f", 
-        length(validated[validated==FALSE]),
-        length(predicted),
-        length(validated[validated==FALSE])/length(predicted))
-
-
-#----------------------------------------------------------
-## train with first 3 points
-svm_model <- svm(trainSet3$category ~ ., trainSet3,kernel="linear")
-summary(svm_model)
-# show weights of hyperplane
-t(svm_model$coefs)%*% svm_model$SV
-# show negative intercept of hyperplane
-svm_model$rho
-
-predicted <- predict(svm_model, x)
-validated <- (predicted==x$category)
-sprintf("misclassified=%d/%d, ratio=%f", 
-        length(validated[validated==FALSE]),
-        length(predicted),
-        length(validated[validated==FALSE])/length(predicted))
-
-
-#----------------------------------------------------------
-## train with first 4 points
-svm_model <- svm(trainSet4$category ~ ., trainSet4,kernel="linear")
-summary(svm_model)
-# show weights of hyperplane
-t(svm_model$coefs)%*% svm_model$SV
-# show negative intercept of hyperplane
-svm_model$rho
-
-predicted <- predict(svm_model, x)
-validated <- (predicted==x$category)
-sprintf("misclassified=%d/%d, ratio=%f", 
-        length(validated[validated==FALSE]),
-        length(predicted),
-        length(validated[validated==FALSE])/length(predicted))
-
-#----------------------------------------------------------
-## train with all points
-svm_model <- svm(x$category ~ ., x,kernel="linear")
-summary(svm_model)
-# show weights of hyperplane
-t(svm_model$coefs)%*% svm_model$SV
-# show negative intercept of hyperplane
-svm_model$rho
-
-predicted <- predict(svm_model, x)
-validated <- (predicted==x$category)
-sprintf("misclassified=%d/%d, ratio=%f", 
-        length(validated[validated==FALSE]),
-        length(predicted),
-        length(validated[validated==FALSE])/length(predicted))
 
 #----------------------------------------------------------
 library(rgl)
 plot3d(x$'x1', x$'x2', x$'x1x2', col=x$'category',
        xlab='x1', ylab='x2',zlab='x1x2', type='s', size=2.4)
 
-plot3d(x$'x1', x$'x2', x$'x1^2', col=x$'category',
-       xlab='x1', ylab='x2',zlab='x1^2', type='s', size=2.4)
+#plot3d(x$'x1', x$'x2', x$'x1^2', col=x$'category',
+#       xlab='x1', ylab='x2',zlab='x1^2', type='s', size=2.4)
 
-plot3d(x$'x1', x$'x2', x$'x2^2', col=x$'category',
-       xlab='x1', ylab='x2',zlab='x2^2', type='s', size=2.4)
+#plot3d(x$'x1', x$'x2', x$'x2^2', col=x$'category',
+#       xlab='x1', ylab='x2',zlab='x2^2', type='s', size=2.4)
 
-plot3d(x$'x1', x$'x1^2', x$'x2^2', col=x$'category',
-       xlab='x1', ylab='x1^2',zlab='x2^2', type='s', size=2.4)
+#plot3d(x$'x1', x$'x1^2', x$'x2^2', col=x$'category',
+#       xlab='x1', ylab='x1^2',zlab='x2^2', type='s', size=2.4)
 
-plot3d(x$'x1^2', x$'x2^2', x$'x1x2', col=x$'category',
-       xlab='x1^2', ylab='x2^2',zlab='x1x2', type='s', size=2.4)
+#plot3d(x$'x1^2', x$'x2^2', x$'x1x2', col=x$'category',
+#       xlab='x1^2', ylab='x2^2',zlab='x1x2', type='s', size=2.4)
