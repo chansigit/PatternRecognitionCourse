@@ -1,0 +1,12 @@
+function [ output_args ] = getCategory(trainX, test, distFunc, sample)
+    if sample ~= 0
+        trainX = trainX(randsample(1:length(trainX), sample) , :)
+    end
+    
+    len=length(trainX)
+    Score= zeros(1,len)  
+    parfor i= 1:len
+        Score(i)=dist()
+
+end
+

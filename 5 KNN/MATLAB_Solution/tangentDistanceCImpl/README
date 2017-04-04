@@ -1,0 +1,16 @@
+README for the tangent distance implemetation
+
+This implementation is mostly a result of the programming for my
+diploma thesis written in 2000, which also contains more details and
+relevant publications that this implementation is based on:
+
+ D. Keysers. Approaches to Invariant Image Object Recognition. Diploma
+ thesis, Lehrstuhl für Informatik VI, RWTH Aachen, Aachen, June 2000.
+ (http://www-i6.informatik.rwth-aachen.de/~keysers)
+
+
+The sources should be rather self-explaining.
+
+June 2004                         
+Daniel Keysers <keysers@cs.rwth-aachen.de>
+
