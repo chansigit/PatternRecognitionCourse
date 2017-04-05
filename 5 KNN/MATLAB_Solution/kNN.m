@@ -25,10 +25,10 @@
 % imagesc(reshape(X2,28,28),'EraseMode','none',[-1 1])
 % 
 % z=tangentDist(X1,X2, 28,28,[1,1,1,1,1,1,1,0,0],0.0)
-clear
-clc
+clear;
+clc;
 mex tangentDistanceCImpl/tangentDist.c  tangentDistanceCImpl/ortho.c tangentDistanceCImpl/td.c
-load("mnist_dataset/mnist_521303078.mat")
+load("mnist_dataset/mnist_521303078.mat");
 
 x1=train_X(1,:);
 x2=train_X(12,:);
@@ -55,6 +55,39 @@ tic
 tangentDist=tangentDist(x1, x2, 28,28,[1,1,1,1,1,1,1,1,1],0.0)
 toc
 
+
+[n, wid] = size(test_X);
+validate = zeros(1,n);
 tic
-getCategory(train_X, x1, 10)
+parfor i = 1:n
+    validate(i)= test_Y(i) == getCategory(train_X, train_Y, test_X(i,:), 6000, 15);
+end
 toc
+sum(validate)/length(validate)
+
+
+validate = zeros(1,n);
+tic
+parfor i = 1:n
+    validate(i)= test_Y(i) == getCategory(train_X, train_Y, test_X(i,:), 6000, 1);
+end
+toc
+sum(validate)/length(validate)
+
+
+validate = zeros(1,n);
+tic
+parfor i = 1:n
+    validate(i)= test_Y(i) == getCategory(train_X, train_Y, test_X(i,:), 6000, 5);
+end
+toc
+sum(validate)/length(validate)
+
+
+validate = zeros(1,n);
+tic
+parfor i = 1:n
+    validate(i)= test_Y(i) == getCategory(train_X, train_Y, test_X(i,:), 6000, 10);
+end
+toc
+sum(validate)/length(validate)
