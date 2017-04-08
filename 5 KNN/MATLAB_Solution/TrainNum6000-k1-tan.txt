@@ -1,0 +1,2 @@
+TrainNum=6000  k=1  tan
+time=1349.569770 secs, accuracy=0.9630000000

@@ -1,0 +1,2 @@
+TrainNum=6000  k=1  mink1
+time=239.880466 secs, accuracy=0.9310000000

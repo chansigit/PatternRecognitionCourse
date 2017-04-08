@@ -1,32 +1,9 @@
-% % images = 255*loadMNISTImages('mnist_dataset/train-images.idx3-ubyte');
-% % labels = 255*loadMNISTLabels('mnist_dataset/train-labels.idx1-ubyte');
-% % display_network(images(:,1:400));
-% % images(:,1)
-% % disp(labels(1:20));
-% 
-% mex tangentDistanceCImpl/tangentDist.c  tangentDistanceCImpl/ortho.c tangentDistanceCImpl/td.c
-% 
-% 
-% %Train
-% Xtrain = 256*loadMNISTImages('mnist_dataset/train-images.idx3-ubyte');
-% Ytrain = loadMNISTLabels('mnist_dataset/train-labels.idx1-ubyte');
-% Xtrain=Xtrain';
-% 
-% %Test
-% Xtest = 256*loadMNISTImages('mnist_dataset/t10k-images.idx3-ubyte');
-% Ytest = loadMNISTLabels('mnist_dataset/t10k-labels.idx1-ubyte');
-% Xtest=Xtest';
-% 
-% size(Xtrain)
-% 
-% X1=Xtrain(51,:);
-% X2=Xtrain(20,:);
-% imagesc(reshape(X1,28,28),'EraseMode','none',[-1 1])
-% imagesc(reshape(X2,28,28),'EraseMode','none',[-1 1])
-% 
-% z=tangentDist(X1,X2, 28,28,[1,1,1,1,1,1,1,0,0],0.0)
 clear;
 clc;
+%profile_master = parallel.importProfile('LocalProfile1');
+%parallel.defaultClusterProfile(profile_master)
+
+
 mex tangentDistanceCImpl/tangentDist.c  tangentDistanceCImpl/ortho.c tangentDistanceCImpl/td.c
 load("mnist_dataset/mnist_521303078.mat");
 
@@ -35,59 +12,26 @@ x2=train_X(12,:);
 %imshowpair(reshape(x1,28,28), reshape(x2,28,28), 'montage')
 
 
-tic
-minkow1Dist=minkowskiDist(x1,x2,1)
-toc
-
-tic
-minkow1o5Dist=minkowskiDist(x1,x2,1.5)
-toc
-
-tic
-minkow2Dist=minkowskiDist(x1,x2,2)
-toc 
-
-tic
-minkow3Dist=minkowskiDist(x1,x2,3)
-toc
-
-tic
-tangentDist=tangentDist(x1, x2, 28,28,[1,1,1,1,1,1,1,1,1],0.0)
-toc
-
-
 [n, wid] = size(test_X);
 validate = zeros(1,n);
+
+
+sample = 6000;
+k      = 3;
+method = 'mink1';
+TaskName=sprintf("TrainNum%d-k%d-%s",sample,k,method);
+
 tic
 parfor i = 1:n
-    validate(i)= test_Y(i) == getCategory(train_X, train_Y, test_X(i,:), 6000, 15);
+    validate(i)= test_Y(i) == getCategory(train_X, train_Y, test_X(i,:), sample, k, method);
 end
-toc
-sum(validate)/length(validate)
+elapse=toc
+
+save(TaskName+".res.mat","validate");
+acc=sum(validate)/length(validate);
 
 
-validate = zeros(1,n);
-tic
-parfor i = 1:n
-    validate(i)= test_Y(i) == getCategory(train_X, train_Y, test_X(i,:), 6000, 1);
-end
-toc
-sum(validate)/length(validate)
+fprintf(fopen(TaskName+".txt", 'w'), "TrainNum=%d  k=%d  %s\ntime=%f secs, accuracy=%.10f",sample,k,method, elapse, acc);
 
-
-validate = zeros(1,n);
-tic
-parfor i = 1:n
-    validate(i)= test_Y(i) == getCategory(train_X, train_Y, test_X(i,:), 6000, 5);
-end
-toc
-sum(validate)/length(validate)
-
-
-validate = zeros(1,n);
-tic
-parfor i = 1:n
-    validate(i)= test_Y(i) == getCategory(train_X, train_Y, test_X(i,:), 6000, 10);
-end
-toc
-sum(validate)/length(validate)
+poolobj = gcp('nocreate');
+delete(poolobj);

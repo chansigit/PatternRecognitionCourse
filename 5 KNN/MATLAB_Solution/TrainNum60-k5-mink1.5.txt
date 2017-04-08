@@ -1,0 +1,2 @@
+TrainNum=60  k=5  mink1.5
+time=35.631265 secs, accuracy=0.5391000000

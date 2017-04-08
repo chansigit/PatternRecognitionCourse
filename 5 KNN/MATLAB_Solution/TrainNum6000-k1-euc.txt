@@ -1,0 +1,2 @@
+TrainNum=6000  k=1  euc
+time=227.105914 secs, accuracy=0.9392000000
